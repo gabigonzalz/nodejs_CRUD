@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-r from-blue-400 to-purple-500 min-h-screen flex items-center justify-center flex-col">
+    <h1 class="text-white text-4xl font-bold mb-8">Most Liked Artists</h1>
+    
+    <!-- Add an artist to the database -->
+    <a href="/add">
+        <button class="bg-white text-blue-600 font-semibold py-2 px-4 rounded shadow hover:bg-blue-100 transition">Add Artist</button>
+    </a>
+
+    <!-- Dismissable message box -->
+    <% if (message) { %>
+        <div class="bg-green-500 text-white rounded-lg shadow-md p-4 mt-4 flex items-center justify-between">
+            <span><%= message %></span>
+            <span class="cursor-pointer" onclick="this.parentElement.style.display='none';">&times;</span>
+        </div>
+    <% } %>
+
+    <!-- Showing the artists dynamically (EJS)-->
+    <div class="mt-6 w-full max-w-3xl">
+        <!-- If there are artists in the database -->
+        <% if (artists.length > 0) { %>
+            <table class="min-w-full bg-white shadow-lg rounded-lg overflow-hidden">
+                <thead class="bg-blue-600 text-white">
+                    <tr>
+                        <th class="py-2 px-4">Position</th>
+                        <th class="py-2 px-4">Artist</th>
+                        <th class="py-2 px-4">Amount of Likes</th>
+                        <th class="py-2 px-4">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% artists.forEach((row, index) => { %>
+                        <tr class="hover:bg-blue-100 transition">
+                            <td class="border-t border-gray-300 py-2 px-4 text-center"><%= index + 1 %></td>
+                            <td class="border-t border-gray-300 py-2 px-4 text-center"><%= row.artists %></td>
+                            <td class="border-t border-gray-300 py-2 px-4 text-center"><%= row.likes %></td>
+                            <td class="border-t border-gray-300 py-2 px-4 text-center">
+                                <button onclick="likeArtist(<%= row.id %>)" class="text-red-500 hover:text-red-600 transition">❤️</button>
+                                <button onclick="editArtist(<%= row.id %>)" class="text-yellow-500 hover:text-yellow-600 transition">✏️</button>
+                                <button onclick="deleteArtist(<%= row.id %>)" class="text-red-600 hover:text-red-700 transition">🗑️</button>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <!-- If there are no artists in the database -->
+        <% } else { %>
+            <h1 class="text-white text-2xl mt-6">No artists in the database</h1>
+        <% } %>
+    </div>
+
+    <!-- JavaScript buttons  -->
+    <script>
+        // Button function to like an artist
+        function likeArtist(artistId) {
+            fetch(`/like/${artistId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            })
+            .catch(error => console.error('Error liking artist:', error));
+        }
+        // Button function to edit artist
+        function editArtist(artistId) {
+            // Redirect to the edit page
+            window.location.href = `/edit/${artistId}`;
+        }
+
+
+        // Button function to delete an artist
+        async function deleteArtist(id) {
+            const response = await fetch(`/delete/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+            
+            // Reload the page after deletion
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                // Optionally display an error message in the designated area
+                const messageBox = document.getElementById('messageBox');
+                messageBox.textContent = data.message; // Use the error message from the server
+                messageBox.style.display = 'block'; // Show the message box
+            }
+        }
+    </script>
+</body>
+
+</html>
