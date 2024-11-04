@@ -87,11 +87,3 @@ Contributions are **always** welcome!
 If you'd like to contribute to this project, feel free to fork the repository and submit a pull request. 
 
 Any improvements or bug fixes are welcome!
-
-## Customization
-
-- Replace `<repository-url>` with the actual URL of your repository.
-- Adjust any sections as needed based on the specific features and requirements of your application.
-- You may want to include additional sections like "Testing", "Deployment", or "Acknowledgements" if relevant. 
-
-Feel free to modify this template to better fit your project's needs!
