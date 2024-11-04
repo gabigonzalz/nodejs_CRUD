@@ -77,9 +77,9 @@ npm start
 - **DELETE /delete/:id:** Deletes an artist from the database.
 - **POST /like/:id:** Likes an artist, incrementing their like count.
 ## Views
-- *index.ejs:* Displays all artists.
-- *add_artist.ejs:8* Form to add a new artist.
-- *edit_artist.ejs:* Form to edit an existing artist.
+- *index.ejs:*  Displays all artists.
+- *add_artist.ejs:*  Form to add a new artist.
+- *edit_artist.ejs:*  Form to edit an existing artist.
 ## Contributing
 
 Contributions are **always** welcome!
